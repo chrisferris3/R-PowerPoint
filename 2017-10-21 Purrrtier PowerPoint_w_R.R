@@ -26,8 +26,10 @@ df.hpi <- fhfa.data %>%
   ungroup()
 
 # Let's a take a look
-knitr::kable(tail(df.hpi %>% arrange(date,state) %>% select(date,state,hpa) %>% map_if(is.numeric,percent) %>% data.frame(),10), row.names = FALSE)
-
+knitr::kable(tail(df.hpi %>% arrange(date,state) %>% 
+                    select(date,state,hpa) %>% 
+                    map_if(is.numeric,percent) %>% 
+                    data.frame(),10), row.names = FALSE)
 
 
 # Get a list of states, will be useful later
@@ -38,7 +40,9 @@ s.list<-unique(df.hpi$state)
 #####################################################################################
 
 f.state<-function(s="CA"){
-  filter(df.hpi,state==s) %>% map_if(is.character,as.factor) %>% data.frame()
+  filter(df.hpi,state==s) %>% 
+    map_if(is.character,as.factor) %>% 
+    data.frame()
 }
 
 #####################################################################################
@@ -62,20 +66,26 @@ plotf <- function(in.df = f.state("CA")){
     scale_x_date(date_breaks = "5 years", date_labels = "%Y")
 }
 
+plotf()
+
+#####################################################################################
+## Make PowerPoint Deck ##
+#####################################################################################
 
 # Load blank.pptx, an empty powerpoint that serves as a template
 my_pres<-read_pptx("data/blank.pptx")
 
 # function for adding slides
-myp2<- function(i){
+# updated 11/3/2017 to fix function references (was mp2, should be mp)
+myp <- function(i){
   my_pres %>% 
     add_slide(layout = "Blank", master = "Office Theme") %>%
-    ph_with_vg_at(code = print(plotf2(f.state(s.list[i]))) , 0.1, 0.1, 9.8, 7.3) ->
+    ph_with_vg_at( code=print(plotf(f.state(s.list[i]))) , 0.1, 0.1, 9.8, 7.3) ->
     my_pres
 }
 
 # use purrr::walk() to write the files
-purrr::walk(1:N,myp2)
+purrr::walk(1:51,myp)
 
 # save the .pptx file
 my_pres %>%
