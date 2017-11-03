@@ -5,7 +5,8 @@
 library(tidyverse)
 library(tidyquant)
 library(knitr)
-
+library(officer)
+library(magrittr)
 
 ##########################################################
 # Step 1: Prepare for data                              ##
@@ -165,26 +166,39 @@ myplot2("PAYEMS", "diff", save = "Y")
 
 
 ##### save images
-mylookup %>% mutate(test = walk2(symbol, trans, myplot(save = "Y")))
+### not sure why this is not working
+### mylookup %>% mutate(test = walk2(symbol, trans, myplot(save = "Y")))
 
+### Not sure why it did not work above, but the heavy lifting version worked
 
-
-
-
-
+myplot("UNRATE", "none", save = "Y")
+myplot("PAYEMS", "diff", save = "Y")
+myplot("HOUST", "none", save = "Y")
+myplot("TB3MS", "none", save = "Y")
+myplot("TB6MS", "none", save = "Y")
+myplot("GS1", "none", save = "Y")
+myplot("GS2", "none", save = "Y")
+myplot("GS5", "none", save = "Y")
+myplot("GS10", "none", save = "Y")
+myplot("CPIAUCSL", "pdiff12", save = "Y")
+myplot("CIVPART", "none", save = "Y")
+myplot("LNS11300060", "none", save = "Y")
+myplot("LNS11300001", "none", save = "Y")
+myplot("LNS11300002", "none", save = "Y")
+myplot("MORTGAGE30US", "none", save = "Y")
+myplot("HPIPONM226S", "pdiff12", save = "Y")
+myplot("HSN1F", "none", save = "Y")
 
 
 # Make chartbook  ####################
  
- library(officer)
- library(magrittr)
+
  
 
 # Set a footer
 myftr <- "@lenkiefer Purrrty PowerPoint"
 
 # presentation
-
 my_pres <- read_pptx("data/blank.pptx") %>%
   
   # Add a slide
@@ -207,3 +221,11 @@ slidef <- function(var, preso = my_pres){
                 src = paste0("img/", var, ".png" # got to get our images
                              )) -> my_pres
 }
+
+#####
+walk(mylookup$symbol, slidef)
+
+# This will add to my_pres variable as side effect
+
+my_pres %>% print(target = paste0("data/","Purrrty.pptx")) %>%
+  invisible()

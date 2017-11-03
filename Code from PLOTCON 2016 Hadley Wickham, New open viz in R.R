@@ -1,13 +1,14 @@
-
 ##########################################
 # libraries #
 ##########################################
 
-library(gapminder)
+library(gapminder)    # data package
 library(tidyverse)
 library(broom)
 
 # created the nested data frame from the source
+
+g <- gapminder 
 
 by_country <- gapminder %>%
   mutate(year1950 = year - 1950 ) %>%  # dataset starts at 1950
